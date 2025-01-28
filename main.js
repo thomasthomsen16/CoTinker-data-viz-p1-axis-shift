@@ -19,7 +19,7 @@ async function renderChart(xField, yField) {
     const yDomain = await getDomain(yField);
 
     // Calculate chart dimensions as a percentage of the screen size
-    const chartWidth = window.innerWidth * 0.8; // 80% of screen width
+    const chartWidth = window.innerWidth * 0.6; // 80% of screen width
     const chartHeight = window.innerHeight * 0.6; // 60% of screen height
 
     // Initial setup of data viz with dynamic domain
