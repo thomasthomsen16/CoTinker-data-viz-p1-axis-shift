@@ -14,4 +14,5 @@ body {
     align-items: left;
     height: 56px;
     width: 100%;
+    padding-left: 8px;
 }
