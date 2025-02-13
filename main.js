@@ -39,8 +39,8 @@ async function renderChart(xField, yField, data) {
     const yDomain = getDomainFromData(data, yField);
 
     // Set the tick count to a specific value if field equals energy, valence or danceability
-    const xTickCount = (xField === 'danceability' || xField === 'energy' || xField === 'valence') ? 50 : undefined;
-    const yTickCount = (yField === 'danceability' || yField === 'energy' || yField === 'valence') ? 50 : undefined;
+    const xTickCount = (xField === 'danceability' || xField === 'energy' || xField === 'valence') ? 30 : undefined;
+    const yTickCount = (yField === 'danceability' || yField === 'energy' || yField === 'valence') ? 30 : undefined;
 
 
     const chartWidth = window.innerWidth * 0.4; // 40% of screen width
