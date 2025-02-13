@@ -31,33 +31,43 @@ function getDomainFromData(data, field) {
     
   }
   
-
-async function renderChart(xField, yField, data) {
+  async function renderChart(xField, yField, data) {
     document.getElementById("chart1").innerHTML = ""; // Clear previous chart
 
     const xDomain = getDomainFromData(data, xField);
     const yDomain = getDomainFromData(data, yField);
 
-    // Set the tick count to a specific value if field equals energy, valence or danceability
-    const xTickCount = (xField === 'danceability' || xField === 'energy' || xField === 'valence') ? 30 : undefined;
-    const yTickCount = (yField === 'danceability' || yField === 'energy' || yField === 'valence') ? 30 : undefined;
-
+    // Set tick count for certain fields
+    const xTickCount = (['danceability', 'energy', 'valence'].includes(xField)) ? 30 : undefined;
+    const yTickCount = (['danceability', 'energy', 'valence'].includes(yField)) ? 30 : undefined;
 
     const chartWidth = window.innerWidth * 0.4; // 40% of screen width
     const chartHeight = window.innerHeight * 0.6; // 60% of screen height
 
-    vl.markCircle({ clip: true })
-      .data(data)  // Use the parsed data array
-      .encode(
-        vl.x().fieldQ(xField).scale({ domain: xDomain }).axis({ tickCount: xTickCount }),
-        vl.y().fieldQ(yField).scale({ domain: yDomain }).axis({ tickCount: yTickCount })
-    )
-      .width(chartWidth)
-      .height(chartHeight)
-      .render()
-      .then(viewElement => {
-          document.getElementById("chart1").appendChild(viewElement);
-      });
+    const spec = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "width": chartWidth,
+        "height": chartHeight,
+        "data": { "values": data },
+        "mark": { "type": "circle", "clip": true },
+        "encoding": {
+            "x": {
+                "field": xField,
+                "type": "quantitative",
+                "scale": { "domain": xDomain },
+                "axis": { "tickCount": xTickCount }
+            },
+            "y": {
+                "field": yField,
+                "type": "quantitative",
+                "scale": { "domain": yDomain },
+                "axis": { "tickCount": yTickCount }
+            }
+        }
+    };
+
+    // Embed the Vega-Lite chart
+    vegaEmbed("#chart1", spec);
 }
 
 // Event listener for when either of the dropdowns change
