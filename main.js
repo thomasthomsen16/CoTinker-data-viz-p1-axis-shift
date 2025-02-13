@@ -19,9 +19,18 @@ fetch(dataSet)
 
 // Function to render the chart based on selected axes
 function getDomainFromData(data, field) {
-    const values = data.map(d => d[field]).filter(v => v != null);
-    return [Math.min(...values), Math.max(...values)];
-}
+    // If the field is one of these three, force the domain to be [0, 1]
+    if (field === 'danceability' || field === 'energy' || field === 'valence') {
+      return [0, 1];
+    } else {
+        // Otherwise, compute the domain from the data
+        const values = data.map(d => d[field]).filter(v => v != null);
+        return [Math.min(...values), Math.max(...values)];
+
+    }
+    
+  }
+  
 
 async function renderChart(xField, yField, data) {
     document.getElementById("chart1").innerHTML = ""; // Clear previous chart
@@ -29,15 +38,20 @@ async function renderChart(xField, yField, data) {
     const xDomain = getDomainFromData(data, xField);
     const yDomain = getDomainFromData(data, yField);
 
-    const chartWidth = window.innerWidth * 0.6; // 60% of screen width
+    // Set the tick count to a specific value if field equals energy, valence or danceability
+    const xTickCount = (xField === 'danceability' || xField === 'energy' || xField === 'valence') ? 50 : undefined;
+    const yTickCount = (yField === 'danceability' || yField === 'energy' || yField === 'valence') ? 50 : undefined;
+
+
+    const chartWidth = window.innerWidth * 0.4; // 40% of screen width
     const chartHeight = window.innerHeight * 0.6; // 60% of screen height
 
     vl.markCircle({ clip: true })
       .data(data)  // Use the parsed data array
       .encode(
-          vl.x().fieldQ(xField).scale({ domain: xDomain }),
-          vl.y().fieldQ(yField).scale({ domain: yDomain })
-      )
+        vl.x().fieldQ(xField).scale({ domain: xDomain }).axis({ tickCount: xTickCount }),
+        vl.y().fieldQ(yField).scale({ domain: yDomain }).axis({ tickCount: yTickCount })
+    )
       .width(chartWidth)
       .height(chartHeight)
       .render()
