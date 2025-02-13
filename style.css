@@ -35,3 +35,6 @@ select {
     align-items: center;
     justify-content: center;
 }
+.marks {
+    border-radius: 5px;
+}
